@@ -232,4 +232,43 @@ modify pics_controller.rb  at
                                 end
                               end
 
-                
+5. added styling
+    rename assets/stylsheets/application.css to application.scss
+
+
+                            @import "bootstrap-sprockets";
+                            @import "bootstrap";
+
+                            body {
+                             background: #E9E9E9;
+                            }
+
+                            h1, h2, h3, h4, h5, h6 {
+                             font-weight: 100;
+                             color: #529ECC;
+                             font-weight: bold;
+                             text-align: center;
+                            }
+
+                            nav {
+                            	box-shadow: 0 1px 2px 0 rgba(82,158,204, 0.22);
+                            	box-color: #529ECC;
+                            	background: #529ECC;
+
+                            	.navbar-brand {
+                            		a {
+                            			color: #529ECC;
+                            			font-weight: bold;
+                            			font-size: 1.6em;
+                            			&:hover {
+                            				text-decoration: none;
+                            			}
+                            		}
+                            	}
+                            }
+
+  added tis line at application.js
+
+
+                                //= require jquery
+                                //= require bootstrap-sprockets
