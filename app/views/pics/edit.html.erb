@@ -1,4 +1,10 @@
-<h1> Fix Pic </h1>
-
+<div class="col-md-8 col-md-offset-2" id="edit_page"></div>
+<div class="row"></div>
+<div class="panel panel-default"></div>
+<div class="panel-heading"></div>
+<h1>Fix Pic </h1>
+<div class="panel-body"></div>
+<div class="current_image"></div>
+<strong class="center">Right Now </strong>
+<%= image_tag @pic.image.url(:medium) %>
 <%= render 'form' %>
-  <%= link_to "Cancel", pic_path %>

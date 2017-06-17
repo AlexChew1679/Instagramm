@@ -85,15 +85,15 @@ nav {
 // 	}
 // }
 //
-// #edit_page {
-// 	.current_image {
-// 		img {
-// 			display: block;
-// 			margin: 20px 0;
-// 		}
-// 	}
-// }
-//
+#edit_page {
+	.current_image {
+		img {
+			display: block;
+			margin: 20px 0;
+		}
+	}
+}
+
 // #pic_show {
 // 	.panel-heading {
 // 		padding: 0;
@@ -106,21 +106,21 @@ nav {
 // 			margin: 0 auto;
 // 		}
 // 	}
-// 	.panel-body {
-// 		padding: 35px;
-// 		h1 {
-// 			margin: 0 0 10px 0;
-// 			color: #529ECC;
-// 			font-weight: bold;
-// 		}
-// 		.description {
-// 			color: #253567;
-// 			font-weight: bold;
-// 			line-height: 1.75;
-// 			margin: 0;
-// 			text-align: center;
-// 		}
-// 	}
+	.panel-body {
+		padding: 35px;
+		h1 {
+			margin: 0 0 10px 0;
+			color: #529ECC;
+			font-weight: bold;
+		}
+		.description {
+			color: #253567;
+			font-weight: bold;
+			line-height: 1.75;
+			margin: 0;
+			text-align: center;
+		}
+	}
 // 	.panel-footer {
 // 		padding: 20px 25px;
 // 		p {
@@ -134,7 +134,7 @@ nav {
 // 		}
 // 	}
 // }
-//
-// textarea {
-// 	min-height: 250px;
-// }
+
+textarea {
+	min-height: 250px;
+}

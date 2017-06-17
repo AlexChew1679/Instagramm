@@ -23,6 +23,8 @@ gem 'coffee-rails', '~> 4.2'
 gem 'simple_form'
 #bootstrap-sass
 gem 'bootstrap-sass', '~> 3.3', '>= 3.3.7'
+#upload image
+gem 'paperclip'
 
 #use devise for user authentication
 gem 'devise'

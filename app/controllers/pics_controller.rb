@@ -33,7 +33,7 @@ class PicsController < ApplicationController
   end
 
   def destroy
-    params.require(:pic).permit(:title, :description)
+    params.require(:pic).permit(:title, :description, :image)
   end
 
 
