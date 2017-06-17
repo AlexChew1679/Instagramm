@@ -1,0 +1,235 @@
+
+1. rails g model Pic title:string description:text
+
+change routes.rb
+                            Rails.application.routes.draw do
+                              resources :pics
+                              root "pics#index"
+                            end
+
+
+create controllers... rails g controllers Pics
+invoke  pics_controller.rb
+
+                                    class PicsController < ApplicationController
+
+                                      def index
+                                      end
+
+                                      def new
+                                        @pic = Pic.new
+                                      end
+
+                                      def create
+                                        @pic = Pic.new(pic_params)
+                                      end
+
+                                      private
+
+                                      def pic_params
+                                        params.require(:pic).permit(:title, :description)
+                                      end
+                                    end
+create pics/new.html.erb
+                              <h1> Post Picture </h2>
+
+                                <%= render 'form' %>
+                                <%= link_to "Back", root_path %>
+
+Install simple_form gem
+gem 'simple_form'
+gem 'bootstrap-sass', '~> 3.3', '>= 3.3.7'
+
+$rails generate simple_form:install --bootstrap
+
+
+
+
+create pics/_form.html.erb
+                              <%= simple_form_for @pic, html: { multipart: true } do |f| %>
+                                <% if @pic.errors.any? %>
+                                  <div id="errors">
+                                    <h2></h2>
+                                    <%= pluralize(@pic.errors.count, "error") %>
+                                    <!-- prevented this Pic from saving-->
+                                    <ul>
+                                      <% @pic.errors.full_messages.each do |msg| %>
+                                        <li>
+                                          <%= msg %>
+                                        </li>
+                                      <% end %>
+                                    </ul>
+                                  </div>
+                                <% end %>
+
+                                <div class="form-group">
+                                  <%= f.input :title, input_html: { class: 'form-control' } %>
+                                </div>
+                                <div class="form-group">
+                                  <%= f.input :description, input_html: { class: 'form-control' } %>
+                                </div>
+                                <%= f.button :submit, class: "btn btn-info" %>
+                              <% end %>
+
+
+  2. Displaying Post
+
+  modify PicsController
+
+                                    class PicsController < ApplicationController
+                                      before_action :find_pic, only: [:show, :edit, :update, :destroy]
+
+                                      def index
+                                      end
+
+                                      def show
+                                      end
+
+                                      def new
+                                        @pic = Pic.new
+                                      end
+
+                                      def create
+                                        @pic = Pic.new(pic_params)
+                                        if @pic.save
+                                          redirect_to @pic, notice: "Yessss, it was posted"
+                                        else
+                                          render 'new'
+                                        end
+                                      end
+
+                                      private
+
+                                      def find_pic
+                                        @pic = Pic.find(params[:id])
+                                      end
+
+                                      def pic_params
+                                        params.require(:pic).permit(:title, :description)
+                                      end
+                                    end
+
+
+add this line inside <body> in application.html.erb
+
+                                        <% flash.each do |name, msg|  %>
+                                          <%= content_tag :div, msg, class: "alert-info" %>
+                                        <% end %>
+                                        <%= yield %>
+create show.html.erb
+
+                                        <h1><%= @pic.title  %></h1>
+                                        <p><%= @pic.description  %></p>
+
+                                        <%= link_to "Back", root_path %>
+
+create index.html.erb
+
+                                    <% @pics.each do |pic|  %>
+                                    <h2><%= link_to pic.title, pic %></h2>
+
+3.
+
+modify PicsController
+
+                                class PicsController < ApplicationController
+                                  before_action :find_pic, only: [:show, :edit, :update, :destroy]
+
+                                  def index
+                                    @pics = Pic.all.order("created_at DESC")
+                                  end
+
+                                  def show
+                                  end
+
+                                  def new
+                                    @pic = Pic.new
+                                  end
+
+                                  def create
+                                    @pic = Pic.new(pic_params)
+                                    if @pic.save
+                                      redirect_to @pic, notice: "Yessss, it was posted"
+                                    else
+                                      render 'new'
+                                    end
+                                  end
+
+                                  def edit
+                                  end
+
+                                  def update
+                                    if @pic.update(pic_params)
+                                      redirect_to @pic, notice: "Congrats! Picture was updated"
+                                    else
+                                      render 'edit'
+                                    end
+                                  end
+
+                                  def destroy
+                                    params.require(:pic).permit(:title, :description)
+                                  end
+
+
+                                  private
+
+                                  def find_pic
+                                    @pic = Pic.find(params[:id])
+
+                                  end
+
+                                  def pic_params
+                                    params.require(:pic).permit(:title, :description)
+                                  end
+                                end
+
+    create an edit.html.erb
+
+                                  <h1> Fix Pic </h1>
+
+                                  <%= render 'form' %>
+                                    <%= link_to "Cancel", pic_path %>
+
+  modify show.html.erb
+
+                            <h1><%= @pic.title  %></h1>
+                            <p><%= @pic.description  %></p>
+
+                            <%= link_to "Back", root_path %>
+                            <%= link_to "Edit", edit_pic_path %>
+                            <%= link_to "Delete", pic_path, method: :delete, data: {confirm: "Are you sure?"} %>
+
+modify index.html.erb
+
+                          <% @pics.each do |pic|  %>
+                          <h2><%= link_to pic.title, pic %></h2>
+                          <%end%>
+
+                          <%= link_to "Gram it" , new_pic_path %>
+
+4.   install devise gem
+                          rails generate devise:install  - follow the instruction in terminal
+
+
+
+rails g migration add_user_id_to_pics user_id:integer:index
+
+                        add at user.rb  => has_many :pics
+                        add at pic.rb => belongs_to :user
+
+modify pics_controller.rb  at
+
+                              def new
+                                @pic = current_user.pics.build
+                              end
+
+                              def create
+                                @pic = current_user.pics.build (pic_params)
+                                if @pic.save
+                                  redirect_to @pic, notice: "Yessss, it was posted"
+                                else
+                                  render 'new'
+                                end
+                              end
+
+                
