@@ -25,6 +25,8 @@ gem 'simple_form'
 gem 'bootstrap-sass', '~> 3.3', '>= 3.3.7'
 #upload image
 gem 'paperclip'
+# masonry_rails
+gem 'masonry-rails'
 
 #use devise for user authentication
 gem 'devise'

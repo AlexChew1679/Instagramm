@@ -272,3 +272,73 @@ modify pics_controller.rb  at
 
                                 //= require jquery
                                 //= require bootstrap-sprockets
+
+  new.html.erb
+
+                                <div class="col-md-8 col-md-offset-2"></div>
+                                <div class="row"></div>
+                                <div class="panel panel-default"></div>
+                                <div class="panel-heading"></div>
+
+                                <h1> Post Picture </h2>
+                                <div class="panel-body"></div>
+                                  <%= render 'form' %>
+
+edit.html.erb
+                              <div class="col-md-8 col-md-offset-2" id="edit_page"></div>
+                              <div class="row"></div>
+                              <div class="panel panel-default"></div>
+                              <div class="panel-heading"></div>
+                              <h1>Fix Pic </h1>
+                              <div class="panel-body"></div>
+                              <%= render 'form' %>
+
+6. Add Image
+
+install imagemagick , gem 'paperclip'
+
+add pic.rb (this get from paperclip github)
+
+                              class Pic < ApplicationRecord
+                                belongs_to :user
+                                has_attached_file :image, styles: { medium: "300x300>", thumb: "100x100>" }
+                                validates_attachment_content_type :image, content_type: /\Aimage\/.*\z/
+                              end
+run this in terminal :
+                            rails g paperclip pic image  <=  NOTE
+
+      it will create migration    => 20170617124526_add_attachment_image_to_pics.rb
+
+IMPORTANT NOTE : IN PAPERCLIP GITHUB, THEY WILL USE AVATAR INSTEAD OF IMAGE...
+has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>" }
+validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\z/
+CAUSE WHEN U RUN MIGRATION => rails g paperclip pic image, U USED PIC=MODEL FILE, IMAGE = AVATAR...
+
+added this line to _form.html.erb
+                            <div class="form-group">
+                              <%= f.input :image, input_html: { class: 'form-control' } %>
+                            </div>
+
+  modify index.html.erb
+
+                              <% @pics.each do |pic|  %>
+                              <%= link_to (image_tag pic.image.url(:medium)),pic %>
+
+                              <h2><%= link_to pic.title, pic %></h2>
+                              <%end%>
+
+added this line at the top of show.html.erb
+                            <%= link_to image_tag(@pic.image.url(:medium)), @pic.image.url %>
+
+modify edit.html.erb
+
+                              <div class="col-md-8 col-md-offset-2" id="edit_page"></div>
+                              <div class="row"></div>
+                              <div class="panel panel-default"></div>
+                              <div class="panel-heading"></div>
+                              <h1>Fix Pic </h1>
+                              <div class="panel-body"></div>
+                              <div class="current_image"></div>
+                              <strong class="center">Right Now </strong>
+                              <%= image_tag @pic.image.url(:medium) %>
+                              <%= render 'form' %>
