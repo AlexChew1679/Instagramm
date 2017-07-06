@@ -33,7 +33,9 @@ class PicsController < ApplicationController
   end
 
   def destroy
-    params.require(:pic).permit(:title, :description, :image)
+    # params.require(:pic).permit(:title, :description, :image)
+    @pic.destroy
+    redirect_to root_path
   end
 
 
