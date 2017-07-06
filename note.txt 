@@ -342,3 +342,10 @@ modify edit.html.erb
                               <strong class="center">Right Now </strong>
                               <%= image_tag @pic.image.url(:medium) %>
                               <%= render 'form' %>
+
+  modify pics_controller.rb
+
+  def pic_params
+    params.require(:pic).permit(:title, :description, :image)  <= permit image 
+  end
+end
