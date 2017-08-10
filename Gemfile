@@ -28,6 +28,8 @@ gem 'paperclip'
 # masonry_rails
 gem 'masonry-rails'
 
+gem 'acts_as_votable'
+
 #use devise for user authentication
 gem 'devise'
 
