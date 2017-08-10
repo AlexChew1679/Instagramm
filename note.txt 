@@ -396,3 +396,133 @@ modify edit.html.erb
                       params.require(:pic).permit(:title, :description, :image)  <=Change here
                     end
                   end
+
+  Add VOteable
+
+  gem 'acts_as_votable'
+  rails g acts_as_votable:migration
+
+  modify model pic
+
+              class Pic < ApplicationRecord
+                acts_as_votable
+                belongs_to :user    <= HERE
+
+                has_attached_file :image, styles: { medium: "300x300>", thumb: "100x100>" }
+                validates_attachment_content_type :image, content_type: /\Aimage\/.*\z/
+              end
+
+  modify routes
+                  Rails.application.routes.draw do
+                    devise_for :users
+                    resources :pics do
+                      member do
+                        put "like", to: "pics#upvote"
+                      end
+                    end
+
+                    root "pics#index"
+                  end
+
+modify PicsController
+
+                          class PicsController < ApplicationController
+                            before_action :find_pic, only: [:show, :edit, :update, :destroy, :upvote]
+                            before_action :authenticate_user!, except: [:index, :show]
+
+                            def index
+                              @pics = Pic.all.order("created_at DESC")
+                            end
+
+                            def show
+                            end
+
+                            def new
+                              @pic = current_user.pics.build
+                            end
+
+                            def create
+                              @pic = current_user.pics.build (pic_params)
+                              if @pic.save
+                                redirect_to @pic, notice: "Yessss, it was posted"
+                              else
+                                render 'new'
+                              end
+                            end
+
+                            def edit
+                            end
+
+                            def update
+                              if @pic.update(pic_params)
+                                redirect_to @pic, notice: "Congrats! Picture was updated"
+                              else
+                                render 'edit'
+                              end
+                            end
+
+                            def destroy
+                              # params.require(:pic).permit(:title, :description, :image)
+                              @pic.destroy
+                              redirect_to root_path
+                            end
+
+                            def upvote
+                              @pic.upvote_by current_user
+                              redirect_to :back
+                            end
+
+                            private
+
+                            def find_pic
+                              @pic = Pic.find(params[:id])
+
+                            end
+
+                            def pic_params
+                              params.require(:pic).permit(:title, :description, :image)
+                            end
+                          end
+
+
+  modify show.html.erb
+
+                    <div class="row" id="pic_show">
+                      <div class="col-md-6 col-md-offset-3">
+                        <div class="panel panel-default">
+                          <div class="panel heading pic_image">
+
+                            <%= image_tag @pic.image.url %>
+                          </div>
+                          <div class="panel-body">
+                            <h1>
+                              <%= @pic.title %>
+                            </h1>
+                            <p>
+                              <%= @pic.description %>
+                            </p>
+                          </div>
+                          <div class="panel-footer">
+                            <div class="row">
+                              <div class="col-md-6">
+                                <p class="user">
+                                  by
+                                  <%= @pic.user.email %>
+                                </p>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="btn-group pull-right">
+                                  <%= link_to like_pic_path(@pic), method: :put, class: "btn btn-default" do %>
+                                    <span class="glyphicon glyphicon-thumbs-up"></span>
+                                    <%= @pic.get_upvotes.size %>
+                                  <% end %>
+
+
+                                  <% if user_signed_in? %>
+                                    <%= link_to "Fix Pic", edit_pic_path, class: "btn btn-info" %>
+                                    <%= link_to "Delete", pic_path, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger" %>
+                                  <% end %>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
